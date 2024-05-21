@@ -13,6 +13,10 @@
         android:theme="@style/Theme.Planner"
         tools:targetApi="31">
         <activity
+            android:name=".ActivityRestaurants"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
