@@ -165,7 +165,7 @@
             android:autofillHints=""
             android:background="@drawable/box_color_cream_white"
             android:ems="10"
-            android:hint="email@gmail.com"
+            android:hint="@string/email_gmail_com"
             android:textColorHint="#757575"
             android:textColor="#757575"
             android:inputType="textEmailAddress"
