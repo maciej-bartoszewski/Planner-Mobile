@@ -98,6 +98,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:maxWidth="275dp"
         app:dividerInsetStart="30dp"
         app:headerLayout="@layout/activity_menu_user"
         app:itemIconPadding="30dp"

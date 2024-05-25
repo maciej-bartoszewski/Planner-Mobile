@@ -18,8 +18,8 @@
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:orientation="vertical"
-            android:background="@drawable/blue_gradient">
+            android:background="@drawable/blue_gradient"
+            android:orientation="vertical">
 
             <include
                 android:id="@+id/toolbar"
@@ -31,12 +31,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/box_gradient_blue"
-                app:backgroundTint="@null"
                 android:fontFamily="sans-serif-smallcaps"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:text="Zgłoś\nwydarzenie"
                 android:textColor="#FFFFFF"
+                app:backgroundTint="@null"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:orientation="vertical"/>
+            android:orientation="vertical" />
 
     </ScrollView>
 
@@ -68,6 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:maxWidth="275dp"
         app:dividerInsetStart="30dp"
         app:headerLayout="@layout/activity_menu_user"
         app:itemIconPadding="30dp"
