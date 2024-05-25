@@ -17,7 +17,7 @@ import java.util.Vector;
 
 public class RestaurantsList {
     private final List<Restaurant> restaurants = new Vector<>();
-    RestaurantsListCallback restaurantsListCallback;
+    private RestaurantsListCallback restaurantsListCallback;
 
     public void loadRestaurants(Context parent) {
         FirebaseFirestore dataBase = FirebaseFirestore.getInstance();

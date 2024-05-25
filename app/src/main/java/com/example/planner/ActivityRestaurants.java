@@ -1,16 +1,22 @@
 package com.example.planner;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -25,12 +31,13 @@ import java.util.Objects;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class ActivityRestaurants extends AppCompatActivity implements RestaurantsList.RestaurantsListCallback {
-    Button reportButton;
-    ImageButton menuButton;
-    LinearLayout restaurantContainerLayout;
-    DrawerLayout drawerLayout;
-    NavigationView navigationView;
-    User user;
+    private Button reportButton;
+    private ImageButton menuButton;
+    private Dialog report;
+    private LinearLayout restaurantContainerLayout;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,7 @@ public class ActivityRestaurants extends AppCompatActivity implements Restaurant
 
         setContentView(R.layout.activity_restaurant_view);
         initializeViews();
+        initializeReportButton();
 
         // displayRestaurants
         RestaurantsList restaurantsList = new RestaurantsList();
@@ -56,6 +64,43 @@ public class ActivityRestaurants extends AppCompatActivity implements Restaurant
 
         MainNavigationView mainNavigationView = new MainNavigationView();
         mainNavigationView.initializeNavigationView(menuButton, drawerLayout, navigationView, user, ActivityRestaurants.this);
+    }
+
+    private void initializeReportButton() {
+        reportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                report = new Dialog(ActivityRestaurants.this);
+                report.setContentView(R.layout.activity_restaurant_report);
+                report.show();
+                Objects.requireNonNull(report.getWindow()).setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                report.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                initializeSendReportButton(report);
+            }
+        });
+    }
+
+    private void initializeSendReportButton(Dialog report) {
+        Button sendReport = report.findViewById(R.id.confirmButton);
+        sendReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = ((EditText) (report.findViewById(R.id.editTextName))).getText().toString();
+                String location = ((EditText) (report.findViewById(R.id.editTextAddress))).getText().toString();
+                String imageLink = ((EditText) (report.findViewById(R.id.editTextImageLink))).getText().toString();
+                String mapLink = ((EditText) (report.findViewById(R.id.editTextMapLink))).getText().toString();
+
+                Restaurant restaurant = new Restaurant(name, location, imageLink, mapLink, false);
+                if (!restaurant.validateRestaurant()) {
+                    Toast.makeText(ActivityRestaurants.this, "Błąd wprowadzonych danych", Toast.LENGTH_SHORT).show();
+                } else {
+                    restaurant.ifReporterCanReportReport(user, ActivityRestaurants.this);
+                    if (report.isShowing()) {
+                        report.dismiss();
+                    }
+                }
+            }
+        });
     }
 
     @Override
