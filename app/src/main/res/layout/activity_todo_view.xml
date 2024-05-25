@@ -9,9 +9,8 @@
     tools:openDrawer="start">
 
     <LinearLayout
-        android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#F1F1F1"
         android:orientation="vertical">
 
@@ -27,6 +26,7 @@
                 layout="@layout/activity_menu_toolbar" />
 
             <TextView
+                android:id="@+id/goodMorning"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
@@ -73,7 +73,7 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layoutToolbar"
+        android:layout_below="@id/layout1"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
@@ -89,7 +89,7 @@
             android:id="@+id/containerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:orientation="vertical" />
     </ScrollView>
 
