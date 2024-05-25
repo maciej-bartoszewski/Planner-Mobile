@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -58,7 +60,7 @@ public class ActivityToDo extends AppCompatActivity {
         setTxtDate();
         setGreeting();
         initializeaddNoteButton();
-
+        displayNotes();
     }
 
     private void initializeViews() {
@@ -225,6 +227,44 @@ public class ActivityToDo extends AppCompatActivity {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
+                            options.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Dialog info = new Dialog(ActivityToDo.this);
+                                    info.setContentView(R.layout.activity_todo_delete_note);
+                                    info.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                    info.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                    int[] location = new int[2];
+                                    options.getLocationOnScreen(location);
+
+                                    WindowManager.LayoutParams layoutParams = info.getWindow().getAttributes();
+                                    layoutParams.gravity = Gravity.TOP | Gravity.START;
+                                    layoutParams.x = location[0];
+                                    layoutParams.y = location[1] + options.getHeight()-100;
+                                    info.getWindow().setAttributes(layoutParams);
+                                    info.show();
+
+                                    Button deleteNote = info.findViewById(R.id.deleteNote);
+                                    deleteNote.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            db.collection("toDoList").document(document.getId())
+                                                    .delete()
+                                                    .addOnSuccessListener(aVoid -> {
+                                                        Toast.makeText(ActivityToDo.this, "Note deleted", Toast.LENGTH_SHORT).show();
+                                                        containerLayout.removeView(newLayout);
+                                                        info.dismiss();
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        Toast.makeText(ActivityToDo.this, "Error deleting note", Toast.LENGTH_SHORT).show();
+                                                    });
+                                        }
+                                    });
+                                }
+                            });
+
                             containerLayout.addView(newLayout);
                         }
                     }
