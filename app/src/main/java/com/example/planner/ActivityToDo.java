@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +25,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -163,7 +166,7 @@ public class ActivityToDo extends AppCompatActivity {
                             public void onSuccess(DocumentReference documentReference) {
                                 Toast.makeText(ActivityToDo.this, "Dodano notatke", Toast.LENGTH_SHORT).show();
                                 containerLayout.removeAllViews();
-//                                displayNotes();
+                                displayNotes();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -175,7 +178,7 @@ public class ActivityToDo extends AppCompatActivity {
                             addNotePopUp.dismiss();
                         }
                     } else {
-                        invalidDate.setText("Niepoprawna data (Format DD/MM/RR)");
+                        invalidDate.setText("Niepoprawna data");
                         invalidDate.setVisibility(View.VISIBLE);
                     }
                 }
@@ -183,5 +186,48 @@ public class ActivityToDo extends AppCompatActivity {
         });
 
     }
+    private void displayNotes() {
+        db.collection("toDoList")
+                .get()
+                .addOnCompleteListener(task -> {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
 
+                        Map<String, Object> data = document.getData();
+                        if (data.get("email").toString().equals(user.getEmail())) {
+
+
+                            LayoutInflater inflater = LayoutInflater.from(this);
+                            View newLayout = inflater.inflate(R.layout.activity_todo_container, containerLayout, false);
+
+                            TextView title = newLayout.findViewById(R.id.title);
+                            TextView description = newLayout.findViewById(R.id.description);
+                            TextView dateText = newLayout.findViewById(R.id.date);
+                            TextView dayText = newLayout.findViewById(R.id.day);
+                            TextView monthText = newLayout.findViewById(R.id.month);
+                            ImageView options = newLayout.findViewById(R.id.options);
+
+                            title.setText(data.get("title").toString());
+                            description.setText(data.get("description").toString());
+
+                            String dateString = data.get("date").toString();
+                            try {
+                                Date date = new SimpleDateFormat("dd/MM/yy", Locale.getDefault()).parse(dateString);
+
+                                String day = new SimpleDateFormat("dd", Locale.getDefault()).format(date);
+                                dateText.setText(day);
+
+                                String dayOfWeek = new SimpleDateFormat("EEE", Locale.getDefault()).format(date);
+                                dayText.setText(dayOfWeek);
+
+                                String month = new SimpleDateFormat("MMM", Locale.getDefault()).format(date);
+                                monthText.setText(month);
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            containerLayout.addView(newLayout);
+                        }
+                    }
+                });
+    }
 }
