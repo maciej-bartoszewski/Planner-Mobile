@@ -46,8 +46,8 @@
             android:text=""
             android:textAlignment="center"
             android:textColor="#F1F1F1"
-            android:textSize="18sp"
-            android:textColorLink="#F1F1F1"/>
+            android:textColorLink="#F1F1F1"
+            android:textSize="18sp" />
 
     </RelativeLayout>
 
