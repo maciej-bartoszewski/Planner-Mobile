@@ -31,14 +31,13 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 
 public class ActivityEvents extends AppCompatActivity implements UpcomingEvents.UpcomingEventsCallback {
-    Button reportButton;
-    ImageButton menuButton;
-    Dialog report;
-    LinearLayout eventContainerLayout;
-    DrawerLayout drawerLayout;
-    NavigationView navigationView;
-
-    User user;
+    private Button reportButton;
+    private ImageButton menuButton;
+    private Dialog report;
+    private LinearLayout eventContainerLayout;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

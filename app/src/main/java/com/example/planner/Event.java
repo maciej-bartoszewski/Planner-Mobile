@@ -1,6 +1,18 @@
 package com.example.planner;
 
 import android.content.Context;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,14 +22,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Vector;
 
-public class Event implements Comparable{
-    String name;
-    String date;
-    String location;
-    String description;
-    String imageLink;
-    String mapLink;
-    boolean isAccepted;
+public class Event implements Comparable {
+    private final String name;
+    private final String date;
+    private final String location;
+    private final String description;
+    private final String imageLink;
+    private final String mapLink;
+    private final boolean isAccepted;
 
     public Event(String name, String description, String location, String date, String imageLink, String mapLink, boolean isAccepted) {
         this.name = name;
@@ -40,7 +52,53 @@ public class Event implements Comparable{
     }
 
     public void ifReporterCanReportReport(User reporter, Context parent) {
+        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
+
+        // Check can reporter report
+        dataBase.collection("events")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            boolean canHe = true;
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Map<String, Object> data = document.getData();
+                                if (data.get("Reporter").equals(reporter.getEmail()) && !(boolean) data.get("IsAccepted")) {
+                                    Toast.makeText(parent, "Twoje poprzednie zgłoszenie\njest nadal przetwarzane", Toast.LENGTH_LONG).show();
+                                    canHe = false;
+                                    break;
+                                }
+                            }
+                            if (canHe) {
+                                reportEvent(reporter, parent);
+                            }
+                        }
+                    }
+                });
     }
+
+    private void reportEvent(User reporter, Context parent) {
+        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
+        HashMap<String, Object> eventMap = this.toHashMap();
+        eventMap.put("Reporter", reporter.getEmail());
+
+        dataBase.collection("events")
+                .add(eventMap)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Toast.makeText(parent, "Wysłano zgłoszenie", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(parent, "Błąd wysyłania zgłoszenia", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     public boolean validateEvent() {
         String[] attributes = {"Name", "Date", "Location", "Description", "ImageLink", "MapLink", "IsAccepted"};
         for (String attribute : attributes) {
@@ -54,7 +112,7 @@ public class Event implements Comparable{
                 if (!Objects.requireNonNull(this.toHashMap().get(attribute)).toString().matches("\\d{2}.\\d{2}.\\d{4} \\d{2}:\\d{2}$")) {
                     return false;
                 }
-                if (!validateDate(Objects.requireNonNull(this.toHashMap().get(attribute)).toString())){
+                if (!validateDate(Objects.requireNonNull(this.toHashMap().get(attribute)).toString())) {
                     return false;
                 }
             }
@@ -76,7 +134,7 @@ public class Event implements Comparable{
         return eventMap;
     }
 
-    private boolean validateDate(String date){
+    private boolean validateDate(String date) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
             try {
@@ -97,15 +155,15 @@ public class Event implements Comparable{
         Vector<Integer> otherDateIntegers = new Vector<>();
         Vector<Integer> thisDateIntegers = new Vector<>();
 
-        for(String s:otherStrings){
+        for (String s : otherStrings) {
             otherDateIntegers.add(Integer.parseInt(s));
         }
-        for(String s:thisStrings){
+        for (String s : thisStrings) {
             thisDateIntegers.add(Integer.parseInt(s));
         }
 
-        Date otherDate = new Date(otherDateIntegers.get(2),otherDateIntegers.get(1),otherDateIntegers.get(0),otherDateIntegers.get(3),otherDateIntegers.get(4));
-        Date thisDate = new Date(thisDateIntegers.get(2),thisDateIntegers.get(1),thisDateIntegers.get(0),thisDateIntegers.get(3),thisDateIntegers.get(4));
+        Date otherDate = new Date(otherDateIntegers.get(2), otherDateIntegers.get(1), otherDateIntegers.get(0), otherDateIntegers.get(3), otherDateIntegers.get(4));
+        Date thisDate = new Date(thisDateIntegers.get(2), thisDateIntegers.get(1), thisDateIntegers.get(0), thisDateIntegers.get(3), thisDateIntegers.get(4));
 
         return thisDate.compareTo(otherDate);
     }

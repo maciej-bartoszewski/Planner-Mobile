@@ -17,7 +17,7 @@ import java.util.Vector;
 
 public class UpcomingEvents {
     private final List<Event> events = new Vector<>();
-    UpcomingEventsCallback eventsCallback;
+    private UpcomingEventsCallback eventsCallback;
 
     public void loadEvents(Context parent) {
         FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
