@@ -2,10 +2,13 @@ package com.example.planner;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +28,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ActivityCreateAccount extends AppCompatActivity {
     private EditText name, lastName, email;
@@ -32,6 +36,7 @@ public class ActivityCreateAccount extends AppCompatActivity {
     private TextView message, haveAccount, logIn;
     private com.google.android.material.textfield.TextInputEditText password, reapetedPassword;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    CheckBox checkbox;
     boolean nameFlag=false,lastNameFlag=false,emailFlag=false,passwordFlag=false,passwordRepeatFlag=false;
 
     @Override
@@ -46,6 +51,10 @@ public class ActivityCreateAccount extends AppCompatActivity {
         haveAccountOption();
     }
     private void initializeViews() {
+        checkbox=findViewById(R.id.checkBox);
+        checkbox.setText(Html.fromHtml("Zgadzam się na RODO link: "+"<a href=\"" +"https://uodo.gov.pl/pl/file/727" + "\">" + "RODO"+ "</a>"));
+        checkbox.setClickable(true);
+        checkbox.setMovementMethod(LinkMovementMethod.getInstance());
         name = findViewById(R.id.Name);
         lastName = findViewById(R.id.LastName);
         email = findViewById(R.id.Email);
@@ -186,7 +195,7 @@ public class ActivityCreateAccount extends AppCompatActivity {
             }
         });
         createAccount.setOnClickListener(v -> {
-            if (lastNameFlag && nameFlag && emailFlag && passwordFlag && passwordRepeatFlag &&!email.getText().toString().isEmpty()) {
+            if (lastNameFlag && nameFlag && emailFlag && passwordFlag && passwordRepeatFlag &&!email.getText().toString().isEmpty()&&checkbox.isChecked()) {
                 message.setVisibility(View.INVISIBLE);
                 Map<String, Object> createAccount = new HashMap<>();
                 createAccount.put("Email", email.getText().toString());
@@ -216,6 +225,9 @@ public class ActivityCreateAccount extends AppCompatActivity {
                 else if (!lastNameFlag) {
                     message.setText("Brak Nazwiska!\n");
                 }
+                else if(!emailFlag ||email.getText().toString().isEmpty() ){
+                    message.setText("Niepoprawny email/email jest w uzyciu\n");
+                }
                 else if (!passwordFlag) {
                     message.setText("Hasło musi składać sie z 8 znaków i znaku specjalnego!\n");
                 }
@@ -223,7 +235,7 @@ public class ActivityCreateAccount extends AppCompatActivity {
                     message.setText("Hasła nie są takie same!\n");
                 }
                 else {
-                    message.setText("Niepoprawny email/email jest w uzyciu\n");
+                    message.setText("Rodo nie zostało zaakceptowane!\n");
                 }
                 message.setVisibility(View.VISIBLE);
             }

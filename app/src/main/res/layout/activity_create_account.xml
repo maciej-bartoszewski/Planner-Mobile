@@ -25,7 +25,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="18dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="18dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/box_color_cream_white"
@@ -272,6 +272,17 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="invisible" />
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/CreateAccount"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="15dp"
+            android:textColor="#000000"
+            android:text="" />
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
