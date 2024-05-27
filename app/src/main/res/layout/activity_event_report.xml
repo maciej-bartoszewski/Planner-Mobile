@@ -68,8 +68,10 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="15dp"
             android:background="@drawable/box_color_cream_white"
+            android:hint="dd.mm.rrrr gg:mm"
             android:padding="10dp"
-            android:textColor="#757575" />
+            android:textColor="#757575"
+            android:textColorHint="#757575" />
 
         <TextView
             android:id="@+id/textLocation"
