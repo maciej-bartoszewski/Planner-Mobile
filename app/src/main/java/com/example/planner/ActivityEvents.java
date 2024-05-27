@@ -5,9 +5,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -126,7 +130,30 @@ public class ActivityEvents extends AppCompatActivity implements UpcomingEvents.
             eventInfoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TO DO
+                    // Create pop up window with more information
+                    Dialog info = new Dialog(ActivityEvents.this);
+                    info.setContentView(R.layout.activity_event_info);
+                    Objects.requireNonNull(info.getWindow()).setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    info.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    TextView eventDescription = info.findViewById(R.id.editTextDescription);
+                    TextView eventLocation = info.findViewById(R.id.editTextLocation);
+                    eventDescription.setText(Objects.requireNonNull(eventMap.get("Description")).toString());
+                    eventLocation.setText(Html.fromHtml("<a href=\"" + Objects.requireNonNull(eventMap.get("MapLink")) + "\">" + Objects.requireNonNull(eventMap.get("Location")) + "</a>"));
+                    eventLocation.setClickable(true);
+                    eventLocation.setMovementMethod(LinkMovementMethod.getInstance());
+
+                    info.show();
+
+                    // Set location under button
+                    int[] location = new int[2];
+                    eventInfoButton.getLocationOnScreen(location);
+
+                    WindowManager.LayoutParams layoutParams = info.getWindow().getAttributes();
+                    layoutParams.gravity = Gravity.TOP | Gravity.START;
+                    layoutParams.x = location[0];
+                    layoutParams.y = location[1] + eventInfoButton.getHeight();
+                    info.getWindow().setAttributes(layoutParams);
                 }
             });
 
