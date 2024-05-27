@@ -1,5 +1,7 @@
 package com.example.planner;
 
+import android.content.Context;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -35,6 +37,9 @@ public class Event implements Comparable{
         imageLink = Objects.requireNonNull(eventMap.get("ImageLink")).toString();
         mapLink = Objects.requireNonNull(eventMap.get("MapLink")).toString();
         isAccepted = ((boolean) eventMap.get("IsAccepted"));
+    }
+
+    public void ifReporterCanReportReport(User reporter, Context parent) {
     }
     public boolean validateEvent() {
         String[] attributes = {"Name", "Date", "Location", "Description", "ImageLink", "MapLink", "IsAccepted"};

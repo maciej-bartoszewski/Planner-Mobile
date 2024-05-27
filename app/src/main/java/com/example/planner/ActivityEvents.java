@@ -1,14 +1,20 @@
 package com.example.planner;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -27,6 +33,7 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 public class ActivityEvents extends AppCompatActivity implements UpcomingEvents.UpcomingEventsCallback {
     Button reportButton;
     ImageButton menuButton;
+    Dialog report;
     LinearLayout eventContainerLayout;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -41,6 +48,7 @@ public class ActivityEvents extends AppCompatActivity implements UpcomingEvents.
 
         setContentView(R.layout.activity_event_view);
         initializeViews();
+        initializeReportButton();
 
         // displayEvents
         UpcomingEvents upcomingEvents = new UpcomingEvents();
@@ -57,6 +65,45 @@ public class ActivityEvents extends AppCompatActivity implements UpcomingEvents.
 
         MainNavigationView mainNavigationView = new MainNavigationView();
         mainNavigationView.initializeNavigationView(menuButton, drawerLayout, navigationView, user, ActivityEvents.this);
+    }
+
+    private void initializeReportButton() {
+        reportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                report = new Dialog(ActivityEvents.this);
+                report.setContentView(R.layout.activity_event_report);
+                report.show();
+                Objects.requireNonNull(report.getWindow()).setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                report.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                initializeSendReportButton(report);
+            }
+        });
+    }
+
+    private void initializeSendReportButton(Dialog report) {
+        Button sendReport = report.findViewById(R.id.confirmButton);
+        sendReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = ((EditText) (report.findViewById(R.id.editTextName))).getText().toString();
+                String date = ((EditText) (report.findViewById(R.id.editTextData))).getText().toString();
+                String location = ((EditText) (report.findViewById(R.id.editTextLocation))).getText().toString();
+                String description = ((EditText) (report.findViewById(R.id.editTextDescription))).getText().toString();
+                String imageLink = ((EditText) (report.findViewById(R.id.editTextImageLink))).getText().toString();
+                String mapLink = ((EditText) (report.findViewById(R.id.editTextMapLink))).getText().toString();
+
+                Event event = new Event(name, description, location, date, imageLink, mapLink, false);
+                if (!event.validateEvent()) {
+                    Toast.makeText(ActivityEvents.this, "Błąd wprowadzonych danych", Toast.LENGTH_SHORT).show();
+                } else {
+                    event.ifReporterCanReportReport(user, ActivityEvents.this);
+                    if (report.isShowing()) {
+                        report.dismiss();
+                    }
+                }
+            }
+        });
     }
 
     @Override
