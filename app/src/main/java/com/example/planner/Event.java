@@ -1,22 +1,7 @@
-package com.example.myapplication;
-
-import android.content.Context;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+package com.example.planner;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,55 +36,6 @@ public class Event implements Comparable{
         mapLink = Objects.requireNonNull(eventMap.get("MapLink")).toString();
         isAccepted = ((boolean) eventMap.get("IsAccepted"));
     }
-
-    public void ifReporterCanReportReport(User reporter, Context parent) {
-        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
-
-        // Check can reporter report
-        dataBase.collection("events")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            boolean canHe = true;
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Map<String, Object> data = document.getData();
-                                if (data.get("Reporter").equals(reporter.getEmail()) && !(boolean) data.get("IsAccepted")) {
-                                    Toast.makeText(parent, "Twoje poprzednie zgłoszenie\njest nadal przetwarzane", Toast.LENGTH_LONG).show();
-                                    canHe = false;
-                                    break;
-                                }
-                            }
-                            if (canHe) {
-                                reportEvent(reporter, parent);
-                            }
-                        }
-                    }
-                });
-    }
-
-    private void reportEvent(User reporter, Context parent) {
-        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
-        HashMap<String, Object> eventMap = this.toHashMap();
-        eventMap.put("Reporter", reporter.getEmail());
-
-        dataBase.collection("events")
-                .add(eventMap)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(parent, "Wysłano zgłoszenie", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(parent, "Błąd wysyłania zgłoszenia", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
     public boolean validateEvent() {
         String[] attributes = {"Name", "Date", "Location", "Description", "ImageLink", "MapLink", "IsAccepted"};
         for (String attribute : attributes) {
