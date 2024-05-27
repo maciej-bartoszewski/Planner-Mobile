@@ -1,4 +1,5 @@
 package com.example.planner;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -7,11 +8,15 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class ActivityCreateAccount extends AppCompatActivity {
-    EditText name, lastName, email;
-    Button createAccount;
-    TextView message, haveAccount, logIn;
-    com.google.android.material.textfield.TextInputEditText password, reapetedPassword;
+    private EditText name, lastName, email;
+    private Button createAccount;
+    private TextView message, haveAccount, logIn;
+    private com.google.android.material.textfield.TextInputEditText password, reapetedPassword;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    boolean nameFlag=false,lastNameFlag=false,emailFlag=false,passwordFlag=false,passwordRepeatFlag=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +25,8 @@ public class ActivityCreateAccount extends AppCompatActivity {
         setContentView(R.layout.activity_create_account);
 
         initializeViews();
+        logInOption();
+        haveAccountOption();
     }
     private void initializeViews() {
         name = findViewById(R.id.Name);
@@ -31,5 +38,18 @@ public class ActivityCreateAccount extends AppCompatActivity {
         createAccount = findViewById(R.id.CreateAccount);
         haveAccount = findViewById(R.id.HaveAccount);
         logIn = findViewById(R.id.LogIn);
+    }
+
+    public void logInOption() {
+        logIn.setOnClickListener(v -> {
+            Intent intent = new Intent(ActivityCreateAccount.this, ActivityLogIn.class);
+            startActivity(intent);
+        });
+    }
+    private void haveAccountOption() {
+        haveAccount.setOnClickListener(v -> {
+            Intent intent = new Intent(ActivityCreateAccount.this, ActivityLogIn.class);
+            startActivity(intent);
+        });
     }
 }
