@@ -47,7 +47,7 @@
             android:layout_marginEnd="15dp"
             android:layout_toEndOf="@+id/imageView2"
             android:background="@drawable/box_color_cream_white"
-            android:hint="Date dd/mm/rr"
+            android:hint="Data DD/MM/RRRR"
             android:textColorHint="#000000"
             android:paddingStart="10dp"
             android:textColor="#000000"/>
