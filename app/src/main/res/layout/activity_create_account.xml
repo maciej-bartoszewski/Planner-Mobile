@@ -174,9 +174,9 @@
             android:background="@drawable/box_color_cream_white"
             android:gravity="center"
             android:text="Masz już konto?"
-            android:textColor="#757575"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="#000000" />
 
         <TextView
             android:id="@+id/LogIn"
@@ -185,13 +185,13 @@
             android:layout_below="@+id/CreateAccount"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/box_color_light_green"
+            android:background="@drawable/box_light_blue"
             android:backgroundTint="@null"
             android:gravity="center"
             android:text="Zaloguj się"
-            android:textColor="#757575"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"/>
 
         <TextView
             android:id="@+id/Message"

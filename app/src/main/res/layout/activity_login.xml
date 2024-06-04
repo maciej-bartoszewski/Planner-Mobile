@@ -42,7 +42,7 @@
                 android:layout_marginEnd="50dp"
                 android:layout_marginBottom="20dp"
                 android:width="300dp"
-                android:background="@drawable/box_color_light_green"
+                android:background="@drawable/box_light_blue"
                 app:backgroundTint="@null"
                 android:text="Stwórz konto"
                 android:textAllCaps="false"
@@ -62,7 +62,7 @@
                 android:layout_marginEnd="80dp"
                 android:text="Nie masz konta?"
                 android:textAlignment="center"
-                android:textColor="#546E7A"
+                android:textColor="#000000"
                 android:textSize="15sp" />
 
         </RelativeLayout>
