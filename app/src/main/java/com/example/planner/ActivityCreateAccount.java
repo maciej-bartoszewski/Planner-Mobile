@@ -238,6 +238,7 @@ public class ActivityCreateAccount extends AppCompatActivity {
                     message.setText("Rodo nie zostało zaakceptowane!\n");
                 }
                 message.setVisibility(View.VISIBLE);
+                new Vibration(ActivityCreateAccount.this);
             }
         });
     }

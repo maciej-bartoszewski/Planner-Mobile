@@ -99,6 +99,7 @@ public class ActivityEvents extends AppCompatActivity implements UpcomingEvents.
                 Event event = new Event(name, description, location, date, imageLink, mapLink, false);
                 if (!event.validateEvent()) {
                     Toast.makeText(ActivityEvents.this, "Błąd wprowadzonych danych", Toast.LENGTH_SHORT).show();
+                    new Vibration(ActivityEvents.this);
                 } else {
                     event.ifReporterCanReportReport(user, ActivityEvents.this);
                     if (report.isShowing()) {

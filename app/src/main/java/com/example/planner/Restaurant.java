@@ -62,6 +62,8 @@ public class Restaurant {
                             }
                             if (canHe) {
                                 reportRestaurant(reporter, parent);
+                            }else{
+                                new Vibration(parent);
                             }
                         }
                     }
