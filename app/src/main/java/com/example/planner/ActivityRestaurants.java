@@ -93,6 +93,7 @@ public class ActivityRestaurants extends AppCompatActivity implements Restaurant
                 Restaurant restaurant = new Restaurant(name, location, imageLink, mapLink, false);
                 if (!restaurant.validateRestaurant()) {
                     Toast.makeText(ActivityRestaurants.this, "Błąd wprowadzonych danych", Toast.LENGTH_SHORT).show();
+                    new Vibration(ActivityRestaurants.this);
                 } else {
                     restaurant.ifReporterCanReportReport(user, ActivityRestaurants.this);
                     if (report.isShowing()) {

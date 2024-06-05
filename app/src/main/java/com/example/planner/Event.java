@@ -72,6 +72,8 @@ public class Event implements Comparable {
                             }
                             if (canHe) {
                                 reportEvent(reporter, parent);
+                            }else {
+                                new Vibration(parent);
                             }
                         }
                     }
